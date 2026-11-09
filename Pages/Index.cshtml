@@ -1,10 +1,23 @@
-﻿@page
-@model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using wt_lab8_8razor_postgresql_zhiznevskaya.Data;
+using wt_lab8_8razor_postgresql_zhiznevskaya.Models;
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+namespace wt_lab8_8razor_postgresql_zhiznevskaya.Pages.Cars;
+
+public class IndexModel : PageModel
+{
+    private readonly AppDbContext _context;
+
+    public IndexModel(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public List<Car> Cars { get; set; } = new();
+
+    public async Task OnGetAsync()
+    {
+        Cars = await _context.Cars.ToListAsync();
+    }
+}

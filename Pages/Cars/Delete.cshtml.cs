@@ -1,31 +1,46 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using wt_lab5_5razor_zhiznevskaya.Data;
-using wt_lab5_5razor_zhiznevskaya.Models;
+using Microsoft.EntityFrameworkCore;
+using wt_lab8_8razor_postgresql_zhiznevskaya.Data;
+using wt_lab8_8razor_postgresql_zhiznevskaya.Models;
 
-namespace wt_lab5_5razor_zhiznevskaya.Pages.Cars;
+namespace wt_lab8_8razor_postgresql_zhiznevskaya.Pages.Cars;
 
 public class DeleteModel : PageModel
 {
-    public Car? Car { get; set; }
+    private readonly AppDbContext _context;
 
-    public IActionResult OnGet(int id)
+    public DeleteModel(AppDbContext context)
     {
-        Car = CarStore.Cars.FirstOrDefault(c => c.Id == id);
-        if (Car == null)
-        {
-            return NotFound();
-        }
+        _context = context;
+    }
+
+    [BindProperty]
+    public Car Car { get; set; } = new();
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var car = await _context.Cars.FirstOrDefaultAsync(m => m.Id == id);
+        if (car == null) return NotFound();
+
+        Car = car;
         return Page();
     }
 
-    public IActionResult OnPost(int id)
+    public async Task<IActionResult> OnPostAsync(int? id)
     {
-        var car = CarStore.Cars.FirstOrDefault(c => c.Id == id);
+        if (id == null) return NotFound();
+
+        var car = await _context.Cars.FindAsync(id);
         if (car != null)
         {
-            CarStore.Cars.Remove(car);
+            Car = car;
+            _context.Cars.Remove(Car);
+            await _context.SaveChangesAsync();
         }
+
         return RedirectToPage("./Index");
     }
 }

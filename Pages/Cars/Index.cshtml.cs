@@ -1,15 +1,23 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using wt_lab5_5razor_zhiznevskaya.Data;
-using wt_lab5_5razor_zhiznevskaya.Models;
+using Microsoft.EntityFrameworkCore;
+using wt_lab8_8razor_postgresql_zhiznevskaya.Data;
+using wt_lab8_8razor_postgresql_zhiznevskaya.Models;
 
-namespace wt_lab5_5razor_zhiznevskaya.Pages.Cars;
+namespace wt_lab8_8razor_postgresql_zhiznevskaya.Pages.Cars;
 
 public class IndexModel : PageModel
 {
+    private readonly AppDbContext _context;
+
+    public IndexModel(AppDbContext context)
+    {
+        _context = context;
+    }
+
     public List<Car> Cars { get; set; } = new();
 
-    public void OnGet()
+    public async Task OnGetAsync()
     {
-        Cars = CarStore.Cars;
+        Cars = await _context.Cars.ToListAsync();
     }
 }
