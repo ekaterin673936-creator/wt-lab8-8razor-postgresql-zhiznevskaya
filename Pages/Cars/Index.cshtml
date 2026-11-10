@@ -1,7 +1,79 @@
-<!-- Форма поиска -->
-<div class="container mb-4">
-    <form method="get" class="d-flex">
-        <input type="text" name="Search" value="@Model.Search" class="form-control me-2" placeholder="Поиск по марке или модели..." />
-        <button type="submit" class="btn btn-primary">Найти</button>
-    </form>
+@page
+@model wt_lab8_8razor_postgresql_zhiznevskaya.Pages.Cars.IndexModel
+@{
+    ViewData["Title"] = "Автопарк";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold"><i class="bi bi-car-front-fill text-primary"></i> Автопарк</h1>
+            <p class="text-muted fs-5">Всего автомобилей: @Model.Cars.Count</p>
+        </div>
+        <a asp-page="/Cars/Create" class="btn btn-primary btn-lg shadow-lg">
+            <i class="bi bi-plus-circle"></i> Добавить автомобиль
+        </a>
+    </div>
+
+    <!-- Форма поиска -->
+    <div class="mb-4">
+        <form method="get" class="d-flex">
+            <input type="text" name="Search" value="@Model.Search" class="form-control me-2" placeholder="Поиск по марке или модели..." />
+            <button type="submit" class="btn btn-primary">Найти</button>
+        </form>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var car in Model.Cars)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-lg rounded-4 border-0 hover-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-gradient bg-primary fs-6 px-3 py-2 rounded-pill">
+                                ID: @car.Id
+                            </span>
+                            @if (car.IsAvailable)
+                            {
+                                <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">
+                                    <i class="bi bi-check-circle"></i> Доступен
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill">
+                                    <i class="bi bi-x-circle"></i> Не доступен
+                                </span>
+                            }
+                        </div>
+
+                        <h3 class="card-title fw-bold mb-2">@car.Brand @car.Model</h3>
+                        <p class="text-muted mb-1">
+                            <i class="bi bi-calendar3"></i> Год: @car.Year
+                        </p>
+
+                        <div class="d-flex align-items-baseline mb-4">
+                            <span class="display-5 fw-bold text-primary">@car.PricePerDay</span>
+                            <span class="fs-6 text-muted ms-2">BYN/день</span>
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a asp-page="/Cars/Details" asp-route-id="@car.Id" 
+                               class="btn btn-outline-primary flex-grow-1">
+                                <i class="bi bi-eye"></i> Подробнее
+                            </a>
+                            <a asp-page="/Cars/Edit" asp-route-id="@car.Id" 
+                               class="btn btn-outline-warning flex-grow-1">
+                                <i class="bi bi-pencil"></i> Ред.
+                            </a>
+                            <a asp-page="/Cars/Delete" asp-route-id="@car.Id" 
+                               class="btn btn-outline-danger flex-grow-1">
+                                <i class="bi bi-trash"></i> Удалить
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
