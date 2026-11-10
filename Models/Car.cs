@@ -8,4 +8,7 @@ public class Car
     public int Year { get; set; }
     public decimal PricePerDay { get; set; }
     public bool IsAvailable { get; set; } = true;
+    
+    // Новое поле для Блока 5
+    public string Description { get; set; } = string.Empty;
 }

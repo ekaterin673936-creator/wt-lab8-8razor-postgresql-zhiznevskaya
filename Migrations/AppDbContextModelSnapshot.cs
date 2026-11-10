@@ -33,6 +33,10 @@ namespace wt_lab8_8razor_postgresql_zhiznevskaya.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("boolean");
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using wt_lab8_8razor_postgresql_zhiznevskaya.Data;
@@ -16,8 +17,19 @@ public class IndexModel : PageModel
 
     public List<Car> Cars { get; set; } = new();
 
+    // Свойство для поиска
+    [BindProperty(SupportsGet = true)]
+    public string? Search { get; set; }
+
     public async Task OnGetAsync()
     {
-        Cars = await _context.Cars.ToListAsync();
+        var query = _context.Cars.AsQueryable();
+        
+        if (!string.IsNullOrWhiteSpace(Search))
+        {
+            query = query.Where(c => c.Brand.Contains(Search) || c.Model.Contains(Search));
+        }
+
+        Cars = await query.ToListAsync();
     }
 }
